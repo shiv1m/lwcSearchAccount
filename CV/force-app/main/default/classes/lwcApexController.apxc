@@ -1,0 +1,30 @@
+public with sharing class lwcApexController {
+    @AuraEnabled(cacheable=true)
+    public static List<Account> searchAccountNameMethod (string accountName){        
+        List<Account> listAccounts = new List<Account>();
+        List<Account> newAcc = new List<Account>();
+        Http http=new Http();
+        HttpRequest request=new HttpRequest();
+        //REST API callout to Org A using setEndpoint method
+        request.setEndpoint('callout:SFDCB/services/apexrest/Accounts');
+        request.setMethod('GET');
+        
+        HttpResponse response=http.send(request);
+        if(response.getStatusCode()==200){           
+            String s = response.getBody();
+            //Deserialize the response to list of Accounts
+            listAccounts = (List<Account>) JSON.deserialize(s, List<Account>.class);
+            //Check for the search Key match in the list
+            for(Account acc : listAccounts){
+                if(accountName!=Null){
+                    if(acc.Name.containsIgnoreCase(accountName)){
+                  		 newAcc.add(acc);                    
+                	}
+                }
+                else
+                    return listAccounts;                
+            }
+        }       
+        return newAcc;
+    }        
+}

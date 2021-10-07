@@ -1,0 +1,8 @@
+@RestResource(urlMapping='/Accounts/*')
+global class CaseWebService {
+	@HttpGet
+    global static List<Account> getAccount() {      		        
+        List<Account> result =  [SELECT Name, BillingCountry, (SELECT ID FROM Contacts), (SELECT ID FROM Opportunities WHERE IsClosed = false) FROM Account];
+        return result;
+    }    
+}

@@ -1,0 +1,37 @@
+//testCallout , HttpCalloutMock
+@isTest
+private class lwcApexTest {
+    @testSetup
+    static void testData() {
+       Account acc = new Account(Name='Test');
+       insert acc; 
+    }
+    
+    @isTest
+    static void testCallout() {
+        Test.startTest();                          
+        Test.setMock(HttpCalloutMock.class, new MockResponse(200));
+        Account acc = [SELECT Id, Name FROM Account WHERE Name='Test' LIMIT 1];
+        List<Account> accList = lwcApexController.searchAccountNameMethod(acc.Name);
+        System.assertNotEquals(0, accList.size());
+        Test.stopTest();
+       
+    }
+    
+    public class MockResponse implements HttpCalloutMock {
+        Integer statusCode;
+        public MockResponse(Integer statusCode) {
+            this.statusCode = statusCode;
+        }
+        public HttpResponse respond(HttpRequest request) {
+            HttpResponse response = new HttpResponse();
+            if(statusCode==200) {
+                response.setBody('[{"name": "test"}]');
+                response.setStatusCode(statusCode);
+                response.setStatus('success');
+            }
+            return response;
+        }
+    }
+
+}
