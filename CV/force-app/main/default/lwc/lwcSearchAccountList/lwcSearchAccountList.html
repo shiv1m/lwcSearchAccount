@@ -1,0 +1,48 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 10-07-2021
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <lightning-card title="Search One Org from Another" icon-name="custom:custom63">
+        <div class="slds-m-around_medium">
+            <p class="slds-p-horizontal_small">
+                <lightning-input type="search" class="slds-m-bottom_small" label="Search Account Name"
+                    onchange={searchAccountAction} value={searchKey}></lightning-input>
+            </p>
+            <p class="slds-m-bottom_small">
+                <lightning-button label="Clear" onclick={clear}></lightning-button>
+            </p>
+            <p class="slds-m-bottom_small">
+                <lightning-button label="Load Accounts" onclick={retrieveAccounts}></lightning-button>
+            </p>
+            <template if:true={tableData}>
+                <div class="slds-p-around--medium">
+                    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;"
+                        class="lwsTablePad">
+                        <tr>
+                            <th>Name</th>
+                            <th>Billing Country</th>
+                            <th>No of contacts</th>
+                            <th>No of opportunities</th>
+                        </tr>
+                        <template for:each={tableData} for:item="accObj" for:index="index">
+                            <tr class="slds-hint-parent" key={accObj.Id}>
+                                <td>{accObj.Name}</td>
+                                <td>{accObj.BillingCountry}</td>
+                                <td>{accObj.Contacts.length}</td>
+                                <td>{accObj.Opportunities.length}</td>
+                            </tr>
+                        </template>
+</table>
+</div>
+</template>
+<template if:true={error}>
+                {error}
+            </template>
+
+</div>
+</lightning-card>
+</template>
